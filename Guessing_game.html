@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            font-family:'Times New Roman', Times, serif;
+            font-size: 20px;
+        }
+        .container{
+            background: linear-gradient(to bottom,red,blue);
+            margin: 20px;
+            padding-bottom: 10px;
+            width: 800px;
+            overflow: hidden;
+        }
+        .div {
+            margin-top: 10px;
+            padding-bottom: 0px;
+            width: 800px;
+        }
+        #status{
+            color: white;
+            padding: 5px;
+            font-size: 1.4em;
+        }
+        input{
+            width: 25%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>Number guessing game</h1>
+    <p>We have selected a random number between 1 and
+         100. See if you can guess it in 10 turns or 
+        fewer. We'll tell you if your guess was too high or too low.</p>
+        <label for="number">Enter a guess:
+            <input type="number" name="number" id="number" min="1" max="100">
+        </label>
+        <button>Submit guess</button>
+        <div class="div" id="pre_guess"></div>
+        <div class="div" id="status"></div>
+        <div class="div" id="number_status"></div>
+        </body>
+</body>
+<script>
+    let container = document.querySelector('.container');
+    let div = document.querySelectorAll('.div');
+    let input = document.getElementById('number');
+    let button = document.querySelector('button');
+    let guessedNum = document.getElementById('pre_guess');
+    let status = document.getElementById('status');
+    let num_status = document.getElementById('number_status');
+    let randomNumber = Math.floor(Math.random() * 100);
+    let new_button = document.createElement('button');
+    new_button.textContent = "Start new game";
+
+    let count = 1;
+    button.addEventListener('click',valid);
+    function valid() {
+        let guess = document.createElement('span');
+        let number = Number(input.value);
+        if (!number || number < 1 || number > 100) {
+            alert("Please enter a valid number between 1 and 100.");
+            input.value = '';
+            return ;
+        }
+        let content = document.createElement('span');
+        if(count === 1) {
+        content.textContent = "Previous guesses:";
+        }
+        guess.textContent += ` ${number} `;
+        guessedNum.appendChild(content);
+        guessedNum.appendChild(guess);
+        
+
+        console.log(randomNumber); 
+        
+        let bstatus = document.createElement('span');
+        let nstatus = document.createElement('span');
+        
+        for(i = 0;i < count;i++){
+            if(count > i) {
+                status.textContent = '';
+                num_status.textContent = '';
+            }
+        }
+
+        if(number === randomNumber) {
+            bstatus.textContent = '';
+            bstatus.textContent = "Congratulations! You got it right!";
+            status.appendChild(bstatus);
+            status.style.background = "green";
+            console.log(true);
+            gameover();
+        }
+
+        else if(count === 15) {
+            bstatus.textContent = "!!!GAME OVER!!!";
+            status.appendChild(bstatus);
+            gameover();
+        }
+        
+        else{
+            bstatus.textContent = "Wrong!";
+            status.appendChild(bstatus);
+            status.style.background = "red";
+            console.log(false);
+            if(number > randomNumber) {
+                nstatus.textContent = "Last guess was too high!";
+                num_status.appendChild(nstatus);
+            }
+            else if(number < randomNumber){
+                nstatus.textContent = "Last guess was too low!";
+                num_status.appendChild(nstatus);
+            }
+        }
+        count++;
+        input.value = '';
+    }
+
+    function gameover() {
+        container.appendChild(new_button);
+        new_button.addEventListener('click',function() {
+            count = 1;
+            new_button.remove();
+            input.value = '';
+            div.forEach(element => element.textContent = '');
+            status.style.background = 'transparent';
+            
+        })
+    }
+</script>
+</html
